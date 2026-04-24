@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para você · CIRCULA</title>
+<meta name="description" content="Planos e benefícios para geradores, cooperativas e empresas com metas ESG. A Circula para o seu perfil.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,700;0,9..144,900;1,9..144,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* ============ TAB SWITCHER ============ */
+.profile-nav {
+  position: sticky;
+  top: 64px;
+  z-index: 50;
+  background: var(--paper);
+  border-bottom: 1px solid var(--grid);
+  padding: 0 3rem;
+}
+.profile-nav-inner {
+  max-width: 1300px;
+  margin: 0 auto;
+  display: flex;
+  gap: 2.5rem;
+  overflow-x: auto;
+}
+.profile-nav a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgba(15,26,20,0.55);
+  text-decoration: none;
+  padding: 1.3rem 0;
+  border-bottom: 2px solid transparent;
+  transition: all .3s;
+  white-space: nowrap;
+}
+.profile-nav a:hover { color: var(--ink); }
+.profile-nav a.is-current { color: var(--clay); border-bottom-color: var(--clay); }
+
+/* ============ PROFILE SECTION ============ */
+.profile {
+  padding: 7rem 3rem;
+  border-bottom: 1px solid var(--grid);
+  position: relative;
+}
+.profile-inner {
+  max-width: 1300px;
+  margin: 0 auto;
+}
+.profile.alt { background: var(--paper-2); }
+.profile.dark { background: var(--ink); color: var(--paper); }
+.profile.dark .section-label { color: var(--lime); }
+
+.profile-header {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 4rem;
+  margin-bottom: 4rem;
+  align-items: end;
+}
+.profile-title {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  line-height: 1;
+  font-weight: 300;
+  font-variation-settings: "opsz" 144, "wght" 300;
+  letter-spacing: -0.04em;
+  margin-top: 1rem;
+}
+.profile-title em { font-style: italic; color: var(--clay); }
+.profile.dark .profile-title em { color: var(--lime); }
+.profile-lead {
+  font-size: 1.2rem;
+  line-height: 1.55;
+  color: rgba(15,26,20,0.72);
+}
+.profile.dark .profile-lead { color: rgba(245,241,232,0.72); }
+
+/* ============ BENEFITS GRID ============ */
+.benefits {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-bottom: 4rem;
+}
+.benefit {
+  background: var(--paper);
+  padding: 2rem;
+  border: 1px solid var(--grid);
+  border-radius: 4px;
+  transition: all .3s;
+}
+.profile.alt .benefit { background: var(--paper); }
+.profile.dark .benefit {
+  background: rgba(245,241,232,0.04);
+  border-color: rgba(245,241,232,0.12);
+}
+.benefit:hover { border-color: var(--clay); transform: translateY(-4px); }
+.benefit-icon {
+  width: 48px; height: 48px;
+  margin-bottom: 1.5rem;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--ink); color: var(--lime);
+  border-radius: 4px;
+}
+.profile.dark .benefit-icon { background: var(--lime); color: var(--ink); }
+.benefit-icon svg { width: 24px; height: 24px; stroke-width: 1.5; fill: none; stroke: currentColor; }
+.benefit-title {
+  font-size: 1.2rem;
+  font-style: italic;
+  font-weight: 500;
+  margin-bottom: 0.7rem;
+  letter-spacing: -0.01em;
+}
+.benefit-text {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: rgba(15,26,20,0.7);
+}
+.profile.dark .benefit-text { color: rgba(245,241,232,0.65); }
+
+/* ============ PRICING / PLANS ============ */
+.plans {
+  margin-top: 4rem;
+  padding-top: 4rem;
+  border-top: 1px solid var(--grid);
+}
+.profile.dark .plans { border-top-color: rgba(245,241,232,0.12); }
+
+.plans-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+  margin-bottom: 3rem;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+.plans-title {
+  font-size: 2rem;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: -0.02em;
+}
+.plans-note {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: rgba(15,26,20,0.55);
+  max-width: 300px;
+  line-height: 1.6;
+  text-align: right;
+}
+.profile.dark .plans-note { color: rgba(245,241,232,0.55); }
+
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+.plan {
+  background: var(--paper);
+  border: 1px solid var(--grid);
+  border-radius: 8px;
+  padding: 2.5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  transition: all .3s;
+}
+.profile.dark .plan {
+  background: rgba(245,241,232,0.04);
+  border-color: rgba(245,241,232,0.12);
+}
+.plan:hover { transform: translateY(-6px); border-color: var(--clay); }
+.plan.featured {
+  background: var(--ink);
+  color: var(--paper);
+  border-color: var(--ink);
+}
+.profile.dark .plan.featured {
+  background: var(--clay);
+  border-color: var(--clay);
+}
+.plan.featured::before {
+  content: 'RECOMENDADO';
+  position: absolute;
+  top: -10px; right: 2rem;
+  background: var(--clay);
+  color: var(--paper);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  padding: 5px 10px;
+  border-radius: 3px;
+}
+.profile.dark .plan.featured::before { background: var(--ink); color: var(--lime); }
+.plan-name {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--clay);
+  margin-bottom: 0.8rem;
+}
+.plan.featured .plan-name { color: var(--lime); }
+.profile.dark .plan.featured .plan-name { color: var(--paper); }
+.plan-price {
+  font-size: 2.8rem;
+  line-height: 1;
+  font-weight: 300;
+  font-variation-settings: "opsz" 144, "wght" 300;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.3rem;
+}
+.plan-price .currency { font-size: 1rem; opacity: 0.5; vertical-align: top; margin-right: 3px; }
+.plan-price .period { font-size: 0.85rem; opacity: 0.5; font-family: 'JetBrains Mono', monospace; }
+.plan-sub {
+  font-size: 0.9rem;
+  color: rgba(15,26,20,0.6);
+  margin-bottom: 2rem;
+  font-style: italic;
+}
+.plan.featured .plan-sub { color: rgba(245,241,232,0.7); }
+.plan-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 2rem;
+  flex: 1;
+}
+.plan-features li {
+  padding: 0.6rem 0;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  border-bottom: 1px solid var(--grid);
+  position: relative;
+  padding-left: 1.4rem;
+}
+.plan.featured .plan-features li { border-color: rgba(245,241,232,0.1); }
+.plan-features li::before {
+  content: '→';
+  position: absolute;
+  left: 0;
+  color: var(--clay);
+  font-weight: 500;
+}
+.plan.featured .plan-features li::before { color: var(--lime); }
+.plan-cta {
+  background: var(--ink); color: var(--paper);
+  padding: 0.9rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  border: none; cursor: pointer;
+  text-align: center;
+  transition: background .3s;
+  text-decoration: none;
+}
+.plan-cta:hover { background: var(--clay); }
+.plan.featured .plan-cta { background: var(--paper); color: var(--ink); }
+.plan.featured .plan-cta:hover { background: var(--lime); }
+
+/* ============ TESTIMONIAL BLOCK ============ */
+.testimonial-block {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 4rem;
+  padding: 4rem 0 0;
+  margin-top: 4rem;
+  border-top: 1px solid var(--grid);
+  align-items: center;
+}
+.profile.dark .testimonial-block { border-top-color: rgba(245,241,232,0.12); }
+.testimonial-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--clay);
+  margin-bottom: 1.5rem;
+}
+.profile.dark .testimonial-label { color: var(--lime); }
+.testimonial-text {
+  font-size: 1.6rem;
+  line-height: 1.35;
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  margin-bottom: 2rem;
+}
+.testimonial-author {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+.testimonial-avatar {
+  width: 48px; height: 48px;
+  background: var(--moss);
+  color: var(--paper);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 500;
+}
+.profile.dark .testimonial-avatar { background: var(--lime); color: var(--ink); }
+.testimonial-meta strong { display: block; font-weight: 500; margin-bottom: 2px; }
+
+/* ============ FAQ ============ */
+.faq {
+  padding: 8rem 3rem;
+  max-width: 1000px; margin: 0 auto;
+}
+.faq-head { margin-bottom: 4rem; }
+.faq-head h2 em { font-style: italic; color: var(--clay); }
+.faq-list {
+  border-top: 1px solid var(--ink);
+}
+.faq-item {
+  border-bottom: 1px solid var(--grid);
+}
+.faq-q {
+  padding: 1.8rem 0;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.2rem;
+  font-weight: 400;
+  font-style: italic;
+  letter-spacing: -0.01em;
+  transition: color .3s;
+  user-select: none;
+}
+.faq-q:hover { color: var(--clay); }
+.faq-icon {
+  width: 32px; height: 32px;
+  border: 1px solid var(--ink);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  font-family: Fraunces;
+  font-size: 1.3rem;
+  font-weight: 300;
+  transition: all .3s;
+}
+.faq-item.open .faq-icon {
+  background: var(--ink);
+  color: var(--paper);
+  transform: rotate(45deg);
+}
+.faq-a {
+  max-height: 0;
+  overflow: hidden;
+  transition: all .4s cubic-bezier(.2,.8,.2,1);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(15,26,20,0.7);
+}
+.faq-item.open .faq-a {
+  max-height: 500px;
+  padding-bottom: 1.8rem;
+}
+
+@media (max-width: 960px) {
+  .profile-nav { top: 60px; padding: 0 1rem; }
+  .profile, .faq { padding: 4rem 1.5rem; }
+  .profile-header { grid-template-columns: 1fr; gap: 2rem; }
+  .benefits, .plans-grid { grid-template-columns: 1fr; }
+  .testimonial-block { grid-template-columns: 1fr; gap: 2rem; }
+  .testimonial-text { font-size: 1.3rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="main-nav">
+  <a href="index.html" class="logo">
+    <span class="logo-dot"></span>
+    CIRCULA
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="index.html">Início</a>
+    <a href="solucao.html">Solução</a>
+    <a href="para-voce.html" class="active">Para você</a>
+    <a href="sobre.html">Sobre</a>
+  </div>
+  <a href="sobre.html#piloto" class="nav-cta">Entrar no piloto</a>
+  <button class="nav-toggle" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-grid"></div>
+  <div class="page-hero-inner">
+    <div>
+      <div class="breadcrumb"><a href="index.html">Início</a><span>/</span>Para você</div>
+      <span class="section-label">Três perfis · Uma malha</span>
+      <h1 class="title-xl page-hero-title">A Circula para <em class="accent-clay">o seu papel</em>.</h1>
+    </div>
+    <p class="page-hero-sub">A plataforma atende três atores centrais da cadeia de reciclagem, cada um com necessidades específicas. Veja o que existe para o seu perfil — e como começar.</p>
+  </div>
+</section>
+
+<!-- PROFILE NAV -->
+<div class="profile-nav">
+  <div class="profile-nav-inner">
+    <a href="#gerador" data-target="gerador" class="is-current">→ 01 · Geradores</a>
+    <a href="#cooperativa" data-target="cooperativa">→ 02 · Cooperativas</a>
+    <a href="#esg" data-target="esg">→ 03 · Empresas ESG</a>
+  </div>
+</div>
+
+<!-- PROFILE 1: GERADORES -->
+<section class="profile" id="gerador">
+  <div class="profile-inner">
+    <div class="profile-header">
+      <div>
+        <span class="section-label">01 · Geradores</span>
+        <h2 class="profile-title">Síndicos, bares, lojistas.<br>Previsibilidade <em>sem planilha.</em></h2>
+      </div>
+      <p class="profile-lead">Para quem separa o reciclável mas perde tempo coordenando a coleta. Três toques e o ciclo inteiro resolvido: agendar, acompanhar, comprovar.</p>
+    </div>
+
+    <div class="benefits">
+      <div class="benefit">
+        <div class="benefit-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="17" rx="2"/><path d="M3 10h18M8 2v5M16 2v5"/></svg>
+        </div>
+        <h3 class="benefit-title">Agenda confiável</h3>
+        <p class="benefit-text">Calendário fixo por condomínio, com SLA de confirmação em duas horas e notificação automática para os moradores.</p>
+      </div>
+      <div class="benefit">
+        <div class="benefit-icon">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M9 13h6M9 17h6"/></svg>
+        </div>
+        <h3 class="benefit-title">Comprovante de destinação</h3>
+        <p class="benefit-text">Recibo digital assinado pela cooperativa com foto, peso e composição. Pronto para apresentar em assembleia ou inspeção.</p>
+      </div>
+      <div class="benefit">
+        <div class="benefit-icon">
+          <svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 6-6"/></svg>
+        </div>
+        <h3 class="benefit-title">Relatório ESG mensal</h3>
+        <p class="benefit-text">PDF automático com impacto ambiental em linguagem humana: árvores equivalentes, litros de água, CO₂ evitado.</p>
+      </div>
+    </div>
+
+    <div class="plans">
+      <div class="plans-head">
+        <h3 class="plans-title">Planos para geradores</h3>
+        <p class="plans-note">Cancelamento sem taxa · Sem fidelidade · Suporte via WhatsApp</p>
+      </div>
+
+      <div class="plans-grid">
+        <div class="plan">
+          <div class="plan-name">Essencial</div>
+          <div class="plan-price"><span class="currency">R$</span>49<span class="period">/mês</span></div>
+          <p class="plan-sub">Para condomínios de até 40 unidades ou negócios com volume mensal inferior a 60kg.</p>
+          <ul class="plan-features">
+            <li>Agendamento semanal fixo</li>
+            <li>Notificação para moradores</li>
+            <li>Recibo digital por coleta</li>
+            <li>Relatório mensal básico</li>
+          </ul>
+          <a href="sobre.html#piloto" class="plan-cta">Assinar essencial</a>
+        </div>
+
+        <div class="plan featured">
+          <div class="plan-name">Condomínio</div>
+          <div class="plan-price"><span class="currency">R$</span>89<span class="period">/mês</span></div>
+          <p class="plan-sub">Para condomínios entre 40 e 120 unidades que querem relatório ESG para assembleia.</p>
+          <ul class="plan-features">
+            <li>Tudo do Essencial</li>
+            <li>Coleta sob demanda extra</li>
+            <li>SLA prioritário de 2h</li>
+            <li>Relatório ESG mensal em PDF</li>
+            <li>Suporte prioritário</li>
+          </ul>
+          <a href="sobre.html#piloto" class="plan-cta">Assinar condomínio</a>
+        </div>
+
+        <div class="plan">
+          <div class="plan-name">Corporativo</div>
+          <div class="plan-price"><span class="currency">R$</span>149<span class="period">/mês</span></div>
+          <p class="plan-sub">Para edifícios comerciais, escritórios ou redes com múltiplos pontos.</p>
+          <ul class="plan-features">
+            <li>Tudo do Condomínio</li>
+            <li>Múltiplos endereços</li>
+            <li>Dashboard centralizado</li>
+            <li>Exportação CSV/API</li>
+            <li>Gerente de conta dedicado</li>
+          </ul>
+          <a href="sobre.html#piloto" class="plan-cta">Falar com time</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial-block">
+      <div>
+        <div class="testimonial-label">→ Voz da persona</div>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">CS</div>
+          <div class="testimonial-meta">
+            <strong>Cláudia, 48</strong>
+            <span>Síndica profissional · Centro</span>
+          </div>
+        </div>
+      </div>
+      <p class="testimonial-text">A gente tenta manter um calendário, mas quando muda o turno do porteiro ou chove muito, embaralha. Muita gente desce com o lixo fora de hora.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROFILE 2: COOPERATIVAS -->
+<section class="profile alt" id="cooperativa">
+  <div class="profile-inner">
+    <div class="profile-header">
+      <div>
+        <span class="section-label">02 · Cooperativas</span>
+        <h2 class="profile-title">Coordenação real,<br><em>não intermediação</em>.</h2>
+      </div>
+      <p class="profile-lead">Para cooperativas e associações que querem uma camada digital sem abrir mão da autonomia. A Circula é infraestrutura, não marketplace extrativo.</p>
+    </div>
+
+    <div class="benefits">
+      <div class="benefit">
+        <div class="benefit-icon">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+        </div>
+        <h3 class="benefit-title">Agenda organizada</h3>
+        <p class="benefit-text">Pedidos chegam agrupados por rota, com materiais e volume estimado. Nada de áudio de WhatsApp disperso.</p>
+      </div>
+      <div class="benefit">
+        <div class="benefit-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2l3 7h7l-5.5 4.5L18 21l-6-4-6 4 1.5-7.5L2 9h7z"/></svg>
+        </div>
+        <h3 class="benefit-title">Filtro de qualidade</h3>
+        <p class="benefit-text">Parceiros são classificados por histórico de entrega. Você escolhe com quem trabalhar — sem ser forçada a aceitar material sujo.</p>
+      </div>
+      <div class="benefit">
+        <div class="benefit-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <h3 class="benefit-title">Comercialização opcional</h3>
+        <p class="benefit-text">Quando fizer sentido, agregamos volume entre cooperativas para negociar preço melhor com a indústria. Você decide quando entrar.</p>
+      </div>
+    </div>
+
+    <div class="plans">
+      <div class="plans-head">
+        <h3 class="plans-title">Como funciona para cooperativas</h3>
+        <p class="plans-note">Tarifa zero nos primeiros 12 meses · Treinamento presencial incluído</p>
+      </div>
+
+      <div class="plans-grid">
+        <div class="plan">
+          <div class="plan-name">Fundadora</div>
+          <div class="plan-price">R$ 0<span class="period">/12 meses</span></div>
+          <p class="plan-sub">Para as três cooperativas que entram conosco no piloto de 2026. Voz ativa no desenho do produto.</p>
+          <ul class="plan-features">
+            <li>Assento no conselho consultivo</li>
+            <li>Ferramenta completa, sem tarifa</li>
+            <li>Treinamento presencial da equipe</li>
+            <li>Prioridade em novas features</li>
+          </ul>
+          <a href="sobre.html#piloto" class="plan-cta">Candidatar cooperativa</a>
+        </div>
+
+        <div class="plan featured">
+          <div class="plan-name">Parceira</div>
+          <div class="plan-price">6%<span class="period">take rate</span></div>
+          <p class="plan-sub">Modelo padrão: cobramos só quando você comercializa via Circula. Acesso completo à plataforma, sem mensalidade.</p>
+          <ul class="plan-features">
+            <li>Agenda, rotas e classificação</li>
+            <li>Recibo digital automático</li>
+            <li>Comercialização agregada opcional</li>
+            <li>Dashboard financeiro</li>
+            <li>Suporte dedicado</li>
+          </ul>
+          <a href="sobre.html#piloto" class="plan-cta">Começar sem taxa</a>
+        </div>
+
+        <div class="plan">
+          <div class="plan-name">Rede</div>
+          <div class="plan-price">Sob medida</div>
+          <p class="plan-sub">Para redes de cooperativas ou federações que querem integração customizada e governança compartilhada.</p>
+          <ul class="plan-features">
+            <li>Tudo da Parceira</li>
+            <li>Painel consolidado multi-coop</li>
+            <li>API para sistemas existentes</li>
+            <li>Relatório para políticas públicas</li>
+            <li>Contrato personalizado</li>
+          </ul>
+          <a href="sobre.html#contato" class="plan-cta">Agendar conversa</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="testimonial-block">
+      <div>
+        <div class="testimonial-label">→ Voz da persona</div>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar">IO</div>
+          <div class="testimonial-meta">
+            <strong>Iraci, 57</strong>
+            <span>Coordenadora · Continente</span>
+          </div>
+        </div>
+      </div>
+      <p class="testimonial-text">Quando o material vem sujo, a triagem demora, a gente perde dinheiro e acaba recusando. Preferimos poucos parceiros fixos que entregam limpo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PROFILE 3: ESG -->
+<section class="profile dark" id="esg">
+  <div class="profile-inner">
+    <div class="profile-header">
+      <div>
+        <span class="section-label">03 · Empresas com metas ESG</span>
+        <h2 class="profile-title">ESG com documento,<br><em>não com press release.</em></h2>
+      </div>
+      <p class="profile-lead">Para supermercados, shoppings e indústrias com obrigações de logística reversa. Comprovação auditável, rastreabilidade ponta a ponta, remuneração direta a cooperativas.</p>
+    </div>
+
+    <div class="benefits">
+      <div class="benefit">
+        <div class="benefit-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4"/></svg>
+        </div>
+        <h3 class="benefit-title">Conformidade PNRS</h3>
+        <p class="benefit-text">Comprovação automática de logística reversa com MTR digital, rastreabilidade por lote e relatório pronto para órgãos reguladores.</p>
+      </div>
+      <div class="benefit">
+        <div class="benefit-icon">
+          <svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="M9 12l2 2 4-4M4 10h16"/></svg>
+        </div>
+        <h3 class="benefit-title">Auditoria aberta</h3>
+        <p class="benefit-text">Relatório de impacto trimestral auditado e publicado. Sem maquiagem verde — os números são os mesmos que a auditoria vê.</p>
+      </div>
+      <div class="benefit">
+        <div class="benefit-icon">
+          <svg viewBox="0 0 24 24"><path d="M21 13.5V8a5 5 0 10-10 0v5.5M6 13h12a2 2 0 012 2v6a2 2 0 01-2 2H6a2 2 0 01-2-2v-6a2 2 0 012-2z"/></svg>
+        </div>
+        <h3 class="benefit-title">Integração com seus sistemas</h3>
+        <p class="benefit-text">API REST para enviar dados de destinação direto para seu ERP, BI ou plataforma ESG corporativa.</p>
+      </div>
+    </div>
+
+    <div class="plans">
+      <div class="plans-head">
+        <h3 class="plans-title">Contratos para empresas</h3>
+        <p class="plans-note">Preços sob consulta · Contratos anuais · SLA customizado</p>
+      </div>
+
+      <div class="plans-grid">
+        <div class="plan">
+          <div class="plan-name">Start ESG</div>
+          <div class="plan-price"><span class="currency">R$</span>3k<span class="period">/mês</span></div>
+          <p class="plan-sub">Para empresas com até 3 pontos de geração e metas iniciais de conformidade.</p>
+          <ul class="plan-features">
+            <li>Até 3 endereços</li>
+            <li>Relatório trimestral</li>
+            <li>MTR digital automático</li>
+            <li>Selo Circula Verificado</li>
+          </ul>
+          <a href="sobre.html#contato" class="plan-cta">Agendar conversa</a>
+        </div>
+
+        <div class="plan featured">
+          <div class="plan-name">Rede ESG</div>
+          <div class="plan-price"><span class="currency">R$</span>8k<span class="period">/mês</span></div>
+          <p class="plan-sub">Redes de varejo, shoppings e indústrias com obrigação de logística reversa robusta.</p>
+          <ul class="plan-features">
+            <li>Até 20 endereços</li>
+            <li>API de integração ESG</li>
+            <li>Relatório mensal auditado</li>
+            <li>Remuneração direta a cooperativas</li>
+            <li>Gerente dedicado</li>
+          </ul>
+          <a href="sobre.html#contato" class="plan-cta">Agendar demo</a>
+        </div>
+
+        <div class="plan">
+          <div class="plan-name">Enterprise</div>
+          <div class="plan-price">Sob medida</div>
+          <p class="plan-sub">Corporações com operação multi-estado e obrigações regulatórias complexas.</p>
+          <ul class="plan-features">
+            <li>Endereços ilimitados</li>
+            <li>SLA personalizado</li>
+            <li>White-label opcional</li>
+            <li>Compliance dedicado</li>
+            <li>Contrato customizado</li>
+          </ul>
+          <a href="sobre.html#contato" class="plan-cta">Falar com comercial</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq">
+  <div class="faq-head">
+    <span class="section-label">Dúvidas frequentes</span>
+    <h2 class="title-lg">Perguntas <em class="accent-clay">honestas</em>.</h2>
+  </div>
+
+  <div class="faq-list">
+    <div class="faq-item">
+      <div class="faq-q">A Circula substitui a coleta pública da Comcap? <span class="faq-icon">+</span></div>
+      <div class="faq-a">Não. A Circula complementa a coleta pública atendendo pequenos e médios geradores que ficam em uma espécie de terra-de-ninguém entre a coleta seletiva regular e os grandes contratos privados. Continuamos apoiando a destinação via cooperativas oficialmente reconhecidas pela Prefeitura.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Como a plataforma trata dados pessoais? <span class="faq-icon">+</span></div>
+      <div class="faq-a">A Circula opera com base legal de legítimo interesse (teste de balanceamento documentado), com criptografia em trânsito e em repouso, DPO designado e política de retenção explícita de 24 meses. O usuário pode exportar ou excluir seus dados diretamente no app, com prazo de até 5 dias úteis.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">A cooperativa perde autonomia se entrar na Circula? <span class="faq-icon">+</span></div>
+      <div class="faq-a">Não. A cooperativa mantém 100% do controle sobre quais clientes aceita, quando comercializa via plataforma e quando prefere vender por fora. A Circula é infraestrutura — não exclusividade. O modelo padrão é take rate de 6% apenas sobre o que é efetivamente transacionado via Circula, sem mensalidade.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Como é calculado o preço do material? <span class="faq-icon">+</span></div>
+      <div class="faq-a">A Circula publica semanalmente uma tabela de preços de referência baseada em cotações da CEMPRE e em pesquisa direta com indústrias recicladoras parceiras em Santa Catarina. O preço final de cada transação pode variar conforme qualidade, volume e frequência, mas a referência é sempre pública.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Funciona em todas as regiões de Florianópolis? <span class="faq-icon">+</span></div>
+      <div class="faq-a">O piloto de 2026 começa em Centro e Lagoa da Conceição. A expansão para Campeche, Trindade, Continente e outras regiões está prevista para o segundo semestre, conforme a Circula consiga fechar parcerias com cooperativas locais. Interesse em outros bairros pode ser registrado na página Sobre.</div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Empresas com metas ESG recebem relatório auditado? <span class="faq-icon">+</span></div>
+      <div class="faq-a">Sim. Todos os contratos ESG incluem relatório mensal com rastreabilidade por lote, MTR digital e indicadores ambientais. Uma vez por trimestre, os dados agregados são auditados por firma independente e publicados abertamente como parte do relatório público de impacto da Circula.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="main-footer">
+  <div class="footer-top">
+    <h3 class="footer-motto">A reciclagem de Floripa merece sair <em>do caderninho.</em></h3>
+    <div class="footer-cta">
+      <span class="section-label">Piloto 2026</span>
+      <a href="sobre.html#piloto" class="btn-light">Candidatar meu bairro</a>
+    </div>
+  </div>
+
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="index.html" class="logo"><span class="logo-dot"></span>CIRCULA</a>
+      <p class="footer-tag">A malha viva da reciclagem em Florianópolis. Uma infraestrutura para que cooperativas, pequenos geradores e grandes compradores falem a mesma língua.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Produto</h4>
+      <a href="solucao.html">Como funciona</a>
+      <a href="para-voce.html#gerador">Para geradores</a>
+      <a href="para-voce.html#cooperativa">Para cooperativas</a>
+      <a href="para-voce.html#esg">Para ESG</a>
+    </div>
+    <div class="footer-col">
+      <h4>Instituição</h4>
+      <a href="sobre.html">Sobre</a>
+      <a href="sobre.html#equipe">Equipe</a>
+      <a href="sobre.html#piloto">Piloto 2026</a>
+      <a href="sobre.html#contato">Contato</a>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <a href="#">Privacidade</a>
+      <a href="#">Termos de uso</a>
+      <a href="#">LGPD · DPO</a>
+      <a href="#">Conformidade PNRS</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 CIRCULA · Florianópolis, SC</span>
+    <span>Feito com cooperativas, não sobre elas.</span>
+  </div>
+</footer>
+
+<script>
+// FAQ toggle
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => q.parentElement.classList.toggle('open'));
+});
+
+// Profile nav active state on scroll
+const sections = document.querySelectorAll('.profile');
+const navLinksProfile = document.querySelectorAll('.profile-nav a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(section => {
+    const rect = section.getBoundingClientRect();
+    if (rect.top <= 200 && rect.bottom >= 200) current = section.id;
+  });
+  navLinksProfile.forEach(link => {
+    link.classList.toggle('is-current', link.dataset.target === current);
+  });
+});
+</script>
+</body>
+</html>
