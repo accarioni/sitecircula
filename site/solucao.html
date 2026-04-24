@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Solução · CIRCULA</title>
+<meta name="description" content="Como a Circula coordena gerador, cooperativa e indústria em quatro passos. Arquitetura, fluxo operacional e requisitos do MVP.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,700;0,9..144,900;1,9..144,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<style>
+/* ============ FLOW STEPS (big numbered) ============ */
+.flow-section {
+  padding: 8rem 3rem;
+  max-width: 1300px; margin: 0 auto;
+}
+.flow-head {
+  max-width: 720px;
+  margin-bottom: 6rem;
+}
+.flow-steps-big {
+  display: grid;
+  gap: 0;
+  border-top: 1px solid var(--ink);
+}
+.flow-step-big {
+  display: grid;
+  grid-template-columns: 140px 1fr 1.2fr;
+  gap: 3rem;
+  padding: 3.5rem 0;
+  border-bottom: 1px solid var(--grid);
+  align-items: start;
+  transition: padding .4s;
+}
+.flow-step-big:hover { padding-left: 1rem; }
+.flow-step-num {
+  font-size: clamp(3rem, 5vw, 5rem);
+  line-height: 0.9;
+  font-weight: 300;
+  font-variation-settings: "opsz" 144, "wght" 300;
+  font-style: italic;
+  color: var(--clay);
+  letter-spacing: -0.03em;
+}
+.flow-step-content h3 {
+  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+.flow-step-content h3 em { font-style: italic; color: var(--moss); }
+.flow-step-content p {
+  font-size: 1rem;
+  color: rgba(15,26,20,0.7);
+  line-height: 1.6;
+  max-width: 380px;
+}
+.flow-step-detail {
+  padding: 1.5rem;
+  background: var(--paper-2);
+  border-left: 3px solid var(--moss);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: rgba(15,26,20,0.8);
+}
+.flow-step-detail strong {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--moss);
+  margin-bottom: 0.7rem;
+}
+
+/* ============ ARCHITECTURE ============ */
+.architecture {
+  padding: 8rem 3rem;
+  background: var(--ink);
+  color: var(--paper);
+}
+.arch-inner { max-width: 1300px; margin: 0 auto; }
+.arch-head {
+  max-width: 720px;
+  margin-bottom: 5rem;
+}
+.arch-head .section-label { color: var(--lime); }
+.arch-head h2 em { font-style: italic; color: var(--lime); }
+.arch-head .arch-intro {
+  font-size: 1.1rem;
+  line-height: 1.55;
+  color: rgba(245,241,232,0.7);
+  margin-top: 1rem;
+}
+
+.arch-diagram {
+  background: rgba(245,241,232,0.04);
+  border: 1px solid rgba(245,241,232,0.12);
+  border-radius: 12px;
+  padding: 3rem 2rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+  position: relative;
+  margin-bottom: 4rem;
+}
+.arch-col { position: relative; }
+.arch-col-title {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--lime);
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.8rem;
+  border-bottom: 1px solid rgba(184,209,116,0.3);
+}
+.arch-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+.arch-item {
+  background: rgba(245,241,232,0.05);
+  border: 1px solid rgba(245,241,232,0.1);
+  padding: 0.9rem 1.1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: rgba(245,241,232,0.9);
+  transition: all .3s;
+}
+.arch-item:hover {
+  background: rgba(184,209,116,0.1);
+  border-color: var(--lime);
+  color: var(--paper);
+}
+.arch-item strong {
+  display: block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+  margin-bottom: 3px;
+  font-weight: 500;
+}
+
+/* ============ MVP REQUIREMENTS ============ */
+.requirements {
+  padding: 8rem 3rem;
+  max-width: 1300px; margin: 0 auto;
+}
+.req-head {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  margin-bottom: 4rem;
+  align-items: end;
+}
+.req-head h2 em { font-style: italic; color: var(--clay); }
+.req-intro {
+  font-size: 1.05rem;
+  line-height: 1.55;
+  color: rgba(15,26,20,0.7);
+}
+.req-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border-top: 1px solid var(--ink);
+}
+.req-item {
+  padding: 1.5rem 2rem 1.5rem 0;
+  border-bottom: 1px solid var(--grid);
+  display: grid;
+  grid-template-columns: 60px 1fr;
+  gap: 1.5rem;
+  align-items: start;
+}
+.req-item:nth-child(odd) { border-right: 1px solid var(--grid); padding-right: 2rem; }
+.req-item:nth-child(even) { padding-left: 2rem; padding-right: 0; }
+.req-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--clay);
+  letter-spacing: 0.1em;
+  padding-top: 4px;
+}
+.req-text {
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: var(--ink);
+}
+.req-text strong { font-weight: 500; display: block; margin-bottom: 4px; font-style: italic; }
+.req-text span { color: rgba(15,26,20,0.65); font-size: 0.9rem; }
+
+/* ============ COMPARISON ============ */
+.comparison {
+  padding: 8rem 3rem;
+  background: var(--paper-2);
+  border-top: 1px solid var(--grid);
+  border-bottom: 1px solid var(--grid);
+}
+.comp-inner { max-width: 1200px; margin: 0 auto; }
+.comp-head { margin-bottom: 4rem; max-width: 720px; }
+.comp-head h2 em { font-style: italic; color: var(--clay); }
+.comp-table {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  background: var(--paper);
+  border: 1px solid var(--grid-2);
+}
+.comp-row {
+  display: contents;
+}
+.comp-cell {
+  padding: 1.3rem 1.5rem;
+  border-bottom: 1px solid var(--grid);
+  font-size: 0.95rem;
+  line-height: 1.4;
+  display: flex; align-items: center;
+}
+.comp-cell.header {
+  background: var(--ink);
+  color: var(--paper);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  border-bottom: none;
+  padding: 1.2rem 1.5rem;
+}
+.comp-cell.header.highlight { background: var(--moss-deep); color: var(--lime); }
+.comp-cell.label { font-weight: 500; background: var(--paper-2); font-style: italic; }
+.comp-cell.bad { color: rgba(15,26,20,0.6); }
+.comp-cell.bad::before { content: '✕'; margin-right: 10px; color: var(--clay); font-weight: 700; }
+.comp-cell.good::before { content: '✓'; margin-right: 10px; color: var(--moss); font-weight: 700; }
+.comp-cell.good { background: rgba(184,209,116,0.12); font-weight: 500; }
+
+/* ============ LGPD SECTION ============ */
+.lgpd {
+  padding: 8rem 3rem;
+  max-width: 1300px;
+  margin: 0 auto;
+}
+.lgpd-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 4rem;
+  align-items: start;
+}
+.lgpd-text h2 em { font-style: italic; color: var(--moss); }
+.lgpd-text p {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: rgba(15,26,20,0.75);
+  margin-top: 1.5rem;
+}
+.lgpd-principles {
+  display: grid;
+  gap: 1rem;
+}
+.principle {
+  background: var(--paper-2);
+  padding: 1.5rem 1.8rem;
+  border-left: 3px solid var(--moss);
+  border-radius: 0 8px 8px 0;
+}
+.principle-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--moss);
+  margin-bottom: 6px;
+}
+.principle-title {
+  font-size: 1.15rem;
+  font-style: italic;
+  font-weight: 500;
+  margin-bottom: 6px;
+}
+.principle-text {
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: rgba(15,26,20,0.7);
+}
+
+/* ============ NEXT STEP CTA ============ */
+.next-step {
+  padding: 8rem 3rem;
+  background: var(--paper);
+  border-top: 1px solid var(--grid);
+  text-align: center;
+}
+.next-inner { max-width: 820px; margin: 0 auto; }
+.next-title em { font-style: italic; color: var(--clay); }
+.next-sub {
+  font-size: 1.1rem;
+  color: rgba(15,26,20,0.7);
+  margin: 1.5rem 0 2.5rem;
+}
+.next-actions { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+
+@media (max-width: 960px) {
+  .flow-section, .architecture, .requirements, .comparison, .lgpd, .next-step { padding: 5rem 1.5rem; }
+  .flow-step-big { grid-template-columns: 80px 1fr; gap: 1.5rem; padding: 2.5rem 0; }
+  .flow-step-detail { grid-column: 1 / -1; }
+  .arch-diagram { grid-template-columns: 1fr; gap: 2rem; padding: 2rem 1.5rem; }
+  .req-list { grid-template-columns: 1fr; }
+  .req-item:nth-child(odd) { border-right: none; padding-right: 0; }
+  .req-item:nth-child(even) { padding-left: 0; }
+  .req-head, .lgpd-grid { grid-template-columns: 1fr; gap: 2rem; }
+  .comp-table { grid-template-columns: 1fr; }
+  .comp-cell { border-right: none !important; }
+  .comp-cell.header + .comp-cell.header { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="main-nav">
+  <a href="index.html" class="logo">
+    <span class="logo-dot"></span>
+    CIRCULA
+  </a>
+  <div class="nav-links" id="navLinks">
+    <a href="index.html">Início</a>
+    <a href="solucao.html" class="active">Solução</a>
+    <a href="para-voce.html">Para você</a>
+    <a href="sobre.html">Sobre</a>
+  </div>
+  <a href="sobre.html#piloto" class="nav-cta">Entrar no piloto</a>
+  <button class="nav-toggle" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="page-hero-grid"></div>
+  <div class="page-hero-inner">
+    <div>
+      <div class="breadcrumb"><a href="index.html">Início</a><span>/</span>Solução</div>
+      <span class="section-label">Como funciona</span>
+      <h1 class="title-xl page-hero-title">Quatro passos.<br>Sem <em class="accent-clay">WhatsApp.</em></h1>
+    </div>
+    <p class="page-hero-sub">Do pedido à prova de destinação, a Circula coordena quatro atores em tempo real: o gerador, a plataforma, a cooperativa e a indústria compradora. Cada passo tem responsável, SLA e registro.</p>
+  </div>
+</section>
+
+<!-- FLOW STEPS -->
+<section class="flow-section">
+  <div class="flow-head">
+    <span class="section-label">Fluxo operacional</span>
+    <h2 class="title-lg">Do toque no app <em class="accent-moss">até a prensa</em>.</h2>
+  </div>
+
+  <div class="flow-steps-big">
+    <div class="flow-step-big">
+      <div class="flow-step-num">01</div>
+      <div class="flow-step-content">
+        <h3>O gerador <em>solicita</em>.</h3>
+        <p>Três toques: tipo de material, janela de horário, confirmar. A plataforma geolocaliza o endereço e já identifica quais cooperativas têm capacidade na região.</p>
+      </div>
+      <div class="flow-step-detail">
+        <strong>Nos bastidores</strong>
+        Algoritmo checa regras de negócio (volume mínimo, tipo aceito, raio de operação), propõe cooperativa com maior score de parceria e bloqueia a janela com confirmação em até 2 horas.
+      </div>
+    </div>
+
+    <div class="flow-step-big">
+      <div class="flow-step-num">02</div>
+      <div class="flow-step-content">
+        <h3>A Circula <em>roteiriza</em>.</h3>
+        <p>Pedidos próximos são agrupados automaticamente. O motorista recebe rota otimizada no celular, com ordem de paradas e tempo estimado por parada.</p>
+      </div>
+      <div class="flow-step-detail">
+        <strong>Nos bastidores</strong>
+        Motor de roteirização calcula rota respeitando janelas de horário declaradas. Notificação é enviada para gerador via push e via WhatsApp Business API oficial, 30 minutos antes da chegada.
+      </div>
+    </div>
+
+    <div class="flow-step-big">
+      <div class="flow-step-num">03</div>
+      <div class="flow-step-content">
+        <h3>A cooperativa <em>coleta e classifica</em>.</h3>
+        <p>Motorista registra foto, peso e nota de qualidade (1 a 5) na chegada. Recibo digital é gerado na hora, assinado pela cooperativa e enviado ao gerador.</p>
+      </div>
+      <div class="flow-step-detail">
+        <strong>Nos bastidores</strong>
+        App do motorista funciona offline e sincroniza quando recupera rede. Contaminação é registrada em campo livre, alimentando base de dados para feedback estruturado ao gerador no próximo ciclo.
+      </div>
+    </div>
+
+    <div class="flow-step-big">
+      <div class="flow-step-num">04</div>
+      <div class="flow-step-content">
+        <h3>A indústria <em>compra e comprova</em>.</h3>
+        <p>Material triado e prensado é comercializado com MTR digital. Pagamento é liquidado automaticamente. A destinação fica auditável para o gerador no relatório mensal.</p>
+      </div>
+      <div class="flow-step-detail">
+        <strong>Nos bastidores</strong>
+        Integração com indústrias recicladoras parceiras (papel, vidro, alumínio, plástico) com contratos de preço mínimo por trimestre. Relatório ESG é gerado em PDF com rastreabilidade ponta a ponta.
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ARCHITECTURE -->
+<section class="architecture">
+  <div class="arch-inner">
+    <div class="arch-head">
+      <span class="section-label">Arquitetura</span>
+      <h2 class="title-lg">O que roda <em>por baixo</em> da malha.</h2>
+      <p class="arch-intro">A Circula é construída em três camadas que trabalham juntas: a camada de experiência (onde mora o usuário), a camada de inteligência (onde mora o algoritmo) e a camada de dados (onde mora a governança).</p>
+    </div>
+
+    <div class="arch-diagram">
+      <div class="arch-col">
+        <div class="arch-col-title">→ 01 · Experiência</div>
+        <div class="arch-items">
+          <div class="arch-item"><strong>App mobile</strong>iOS + Android nativo</div>
+          <div class="arch-item"><strong>Painel web</strong>Cooperativas e empresas</div>
+          <div class="arch-item"><strong>WhatsApp oficial</strong>Notificações e suporte</div>
+          <div class="arch-item"><strong>Relatórios PDF</strong>ESG, ANBT, impacto</div>
+        </div>
+      </div>
+
+      <div class="arch-col">
+        <div class="arch-col-title">→ 02 · Inteligência</div>
+        <div class="arch-items">
+          <div class="arch-item"><strong>Roteirização</strong>Grupos de coleta por geo</div>
+          <div class="arch-item"><strong>Matching</strong>Score de parceria gerador-coop</div>
+          <div class="arch-item"><strong>Pricing engine</strong>Tabela referência por material</div>
+          <div class="arch-item"><strong>Quality loop</strong>Feedback iterativo</div>
+        </div>
+      </div>
+
+      <div class="arch-col">
+        <div class="arch-col-title">→ 03 · Governança</div>
+        <div class="arch-items">
+          <div class="arch-item"><strong>LGPD-first</strong>Dados minimizados e auditáveis</div>
+          <div class="arch-item"><strong>MTR digital</strong>Manifesto de transporte</div>
+          <div class="arch-item"><strong>API ESG</strong>Integração com corporações</div>
+          <div class="arch-item"><strong>Dashboard público</strong>Dados agregados anonimizados</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MVP REQUIREMENTS -->
+<section class="requirements">
+  <div class="req-head">
+    <div>
+      <span class="section-label">Requisitos do MVP</span>
+      <h2 class="title-lg">Nove funcionalidades <em class="accent-clay">essenciais</em>.</h2>
+    </div>
+    <p class="req-intro">O MVP foi deliberadamente enxugado para caber em um piloto de 90 dias em dois bairros. Cada requisito abaixo existe porque testa diretamente uma das três dores diagnosticadas.</p>
+  </div>
+
+  <div class="req-list">
+    <div class="req-item">
+      <div class="req-num">01</div>
+      <div class="req-text">
+        <strong>Cadastro de geradores</strong>
+        <span>Endereço geolocalizado, tipo e volume mensal estimado.</span>
+      </div>
+    </div>
+    <div class="req-item">
+      <div class="req-num">02</div>
+      <div class="req-text">
+        <strong>Cadastro de cooperativas</strong>
+        <span>Área de atuação, tipos aceitos, janelas disponíveis, capacidade diária.</span>
+      </div>
+    </div>
+    <div class="req-item">
+      <div class="req-num">03</div>
+      <div class="req-text">
+        <strong>Agendamento com SLA</strong>
+        <span>Confirmação em até 2h via push e WhatsApp oficial.</span>
+      </div>
+    </div>
+    <div class="req-item">
+      <div class="req-num">04</div>
+      <div class="req-text">
+        <strong>Tabela pública de preços</strong>
+        <span>Por tipo de material, atualizada semanalmente com cotação CEMPRE.</span>
+      </div>
+    </div>
+    <div class="req-item">
+      <div class="req-num">05</div>
+      <div class="req-text">
+        <strong>Classificação bidirecional</strong>
+        <span>Gerador avalia pontualidade, cooperativa avalia qualidade (nota 1–5).</span>
+      </div>
+    </div>
+    <div class="req-item">
+      <div class="req-num">06</div>
+      <div class="req-text">
+        <strong>Recibo digital assinado</strong>
+        <span>Foto, peso, composição, com assinatura eletrônica da cooperativa.</span>
+      </div>
+    </div>
+    <div class="req-item">
+      <div class="req-num">07</div>
+      <div class="req-text">
+        <strong>Dashboard do gerador</strong>
+        <span>Histórico, relatório ESG em PDF e equivalente ambiental.</span>
+      </div>
+    </div>
+    <div class="req-item">
+      <div class="req-num">08</div>
+      <div class="req-text">
+        <strong>Dashboard da cooperativa</strong>
+        <span>Agenda, rota, histórico, fluxo de caixa básico.</span>
+      </div>
+    </div>
+    <div class="req-item">
+      <div class="req-num">09</div>
+      <div class="req-text">
+        <strong>Governança LGPD</strong>
+        <span>Consentimento granular, exportação e exclusão pelo próprio usuário.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+<section class="comparison">
+  <div class="comp-inner">
+    <div class="comp-head">
+      <span class="section-label">Comparativo</span>
+      <h2 class="title-lg">O que muda <em class="accent-clay">de verdade</em>.</h2>
+    </div>
+
+    <div class="comp-table">
+      <div class="comp-row">
+        <div class="comp-cell header">Dimensão</div>
+        <div class="comp-cell header">Hoje (WhatsApp + caderno)</div>
+        <div class="comp-cell header highlight">Com a Circula</div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cell label">Agendamento</div>
+        <div class="comp-cell bad">Áudio, confirmação incerta, sem SLA.</div>
+        <div class="comp-cell good">Três toques, SLA de 2h, push + WhatsApp.</div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cell label">Preço do material</div>
+        <div class="comp-cell bad">Boca a boca, variável por cooperado.</div>
+        <div class="comp-cell good">Tabela pública, atualizada semanalmente.</div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cell label">Qualidade</div>
+        <div class="comp-cell bad">Sem feedback estruturado ao gerador.</div>
+        <div class="comp-cell good">Nota bidirecional + comentário específico.</div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cell label">Prova de destinação</div>
+        <div class="comp-cell bad">Inexistente ou informal.</div>
+        <div class="comp-cell good">Recibo digital assinado + MTR.</div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cell label">Relatório ESG</div>
+        <div class="comp-cell bad">Feito à mão ou inexistente.</div>
+        <div class="comp-cell good">PDF automático mensal com impacto ambiental.</div>
+      </div>
+
+      <div class="comp-row">
+        <div class="comp-cell label">Dados da cidade</div>
+        <div class="comp-cell bad">Estimativa, pouco granular.</div>
+        <div class="comp-cell good">Dashboard agregado anonimizado por bairro.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LGPD -->
+<section class="lgpd">
+  <div class="lgpd-grid">
+    <div class="lgpd-text">
+      <span class="section-label">Governança de dados</span>
+      <h2 class="title-lg">LGPD desde o <em class="accent-moss">primeiro commit</em>.</h2>
+      <p>Uma plataforma que trata dados de síndicos, cooperados e comerciantes precisa fazer isso com critério desde o primeiro dia. A Circula adota cinco princípios operacionais que vão além do checklist legal e entram na arquitetura do produto.</p>
+      <p>Base legal documentada, criptografia em trânsito e repouso, logs auditáveis, política de retenção explícita e DPO designado. Privacidade não é página de termos — é decisão de engenharia.</p>
+    </div>
+
+    <div class="lgpd-principles">
+      <div class="principle">
+        <div class="principle-label">Princípio 01</div>
+        <div class="principle-title">Minimização</div>
+        <div class="principle-text">Só coletamos o que precisamos para operar. Dado que não existe não vaza.</div>
+      </div>
+      <div class="principle">
+        <div class="principle-label">Princípio 02</div>
+        <div class="principle-title">Base legal documentada</div>
+        <div class="principle-text">Legítimo interesse com teste de balanceamento registrado para cada categoria de tratamento.</div>
+      </div>
+      <div class="principle">
+        <div class="principle-label">Princípio 03</div>
+        <div class="principle-title">Criptografia ponta a ponta</div>
+        <div class="principle-text">TLS 1.3 em trânsito, AES-256 em repouso. Chaves rotacionadas a cada 90 dias.</div>
+      </div>
+      <div class="principle">
+        <div class="principle-label">Princípio 04</div>
+        <div class="principle-title">Retenção com prazo</div>
+        <div class="principle-text">24 meses por padrão, com exclusão antecipada sob pedido do titular em até 5 dias úteis.</div>
+      </div>
+      <div class="principle">
+        <div class="principle-label">Princípio 05</div>
+        <div class="principle-title">DPO dedicado</div>
+        <div class="principle-text">Encarregado de dados acessível, canal de contato publicado e relatório trimestral de incidentes.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEXT STEP -->
+<section class="next-step">
+  <div class="next-inner">
+    <span class="section-label">Próximo passo</span>
+    <h2 class="title-xl next-title">Quer ver isso <em>rodando</em>?</h2>
+    <p class="next-sub">O piloto começa em maio de 2026 com 35 geradores e 3 cooperativas parceiras. As inscrições para os primeiros bairros estão abertas.</p>
+    <div class="next-actions">
+      <a href="para-voce.html" class="btn-primary">Ver o que fazemos para você</a>
+      <a href="sobre.html#piloto" class="btn-ghost">Entrar no piloto</a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="main-footer">
+  <div class="footer-top">
+    <h3 class="footer-motto">A reciclagem de Floripa merece sair <em>do caderninho.</em></h3>
+    <div class="footer-cta">
+      <span class="section-label">Piloto 2026</span>
+      <a href="sobre.html#piloto" class="btn-light">Candidatar meu bairro</a>
+    </div>
+  </div>
+
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="index.html" class="logo"><span class="logo-dot"></span>CIRCULA</a>
+      <p class="footer-tag">A malha viva da reciclagem em Florianópolis. Uma infraestrutura para que cooperativas, pequenos geradores e grandes compradores falem a mesma língua.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Produto</h4>
+      <a href="solucao.html">Como funciona</a>
+      <a href="para-voce.html#gerador">Para geradores</a>
+      <a href="para-voce.html#cooperativa">Para cooperativas</a>
+      <a href="para-voce.html#esg">Para ESG</a>
+    </div>
+    <div class="footer-col">
+      <h4>Instituição</h4>
+      <a href="sobre.html">Sobre</a>
+      <a href="sobre.html#equipe">Equipe</a>
+      <a href="sobre.html#piloto">Piloto 2026</a>
+      <a href="sobre.html#contato">Contato</a>
+    </div>
+    <div class="footer-col">
+      <h4>Legal</h4>
+      <a href="#">Privacidade</a>
+      <a href="#">Termos de uso</a>
+      <a href="#">LGPD · DPO</a>
+      <a href="#">Conformidade PNRS</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 CIRCULA · Florianópolis, SC</span>
+    <span>Feito com cooperativas, não sobre elas.</span>
+  </div>
+</footer>
+
+</body>
+</html>
